@@ -7,25 +7,25 @@ import (
 	"net/http"
 	"strconv"
 	"github.com/go-chi/chi/v5"
-    "github.com/go-chi/chi/v5/middleware"
-    db "chi-api-example/database"
-    "chi-api-example/models"
+	"github.com/go-chi/chi/v5/middleware"
+	db "chi-api-example/database"
+	"chi-api-example/models"
 )
 
 func InitRouter() *chi.Mux {
 	router := chi.NewRouter()
-    router.Use(middleware.Logger)
+	router.Use(middleware.Logger)
 
-    router.Get("/api/movies", getAllMovies)
-    router.Post("/api/movies", saveMovie)
-    router.Delete("/api/movies/{movieId}", deleteMovie)
+	router.Get("/api/movies", getAllMovies)
+	router.Post("/api/movies", saveMovie)
+	router.Delete("/api/movies/{movieId}", deleteMovie)
 
-    return router
+	return router
 }
 
 func getAllMovies(res http.ResponseWriter, req *http.Request) {
 	queries := db.New(db.GetDbConnection())
-
+	
 	fmt.Println("Get all movies")
 	results, err := queries.GetMovies(context.Background())
 	if err != nil {
@@ -34,11 +34,11 @@ func getAllMovies(res http.ResponseWriter, req *http.Request) {
 	}
 
 	movies := make([]models.Movie, len(results))
-    for i, result := range results {
-        movies[i] = convertDbMovieToModelsMovie(result)
-    }
-    res.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(res).Encode(movies)
+	for i, result := range results {
+	    movies[i] = convertDbMovieToModelsMovie(result)
+	}
+	res.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(res).Encode(movies)
 }
 
 func saveMovie(res http.ResponseWriter, req *http.Request) {
