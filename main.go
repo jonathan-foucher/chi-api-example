@@ -1,16 +1,18 @@
 package main
 
 import (
+	"fmt"
     "net/http"
-    "github.com/go-chi/chi/v5"
-    "github.com/go-chi/chi/v5/middleware"
+    "os"
+	"github.com/joho/godotenv"
+	"chi-api-example/routers"
 )
 
 func main() {
-    r := chi.NewRouter()
-    r.Use(middleware.Logger)
-    r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-        w.Write([]byte("Hello World!"))
-    })
-    http.ListenAndServe(":3000", r)
+	godotenv.Load()
+
+    router := routers.InitRouter()
+    HTTP_PORT := os.Getenv("HTTP_PORT")
+    fmt.Println("Application is starting on port", HTTP_PORT)
+    http.ListenAndServe(":" + HTTP_PORT, router)
 }
